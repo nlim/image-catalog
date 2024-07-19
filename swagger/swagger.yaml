@@ -1,0 +1,123 @@
+openapi: 3.0.3
+info:
+  title: Image Catalog - OpenAPI 3.0
+  description: |-
+
+    Swagger Documentation for the Image Catalog Haskell API Server
+
+    Some useful links:
+    - [Image Catalog repository](https://github.com/nlim/image-catalog)
+    - [The source API definition for the Image Catalog](https://github.com/nlim/image-catalog/blob/main/swagger/swagger.yaml)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: nathaniel.j.lim@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080
+paths:
+  /images:
+    post:
+      tags:
+        - image
+      summary: Save an image
+      operationId: createimage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageCreateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+        '400':
+          description: imageUrl is not valid
+    get:
+      tags:
+        - image
+      summary: Get all the images in the catalog
+      operationId: getimages
+      parameters:
+        - in: query
+          name: objects
+          schema:
+            type: string 
+          required: false
+          description: Comma separated list to filter images returned by their detected objects
+          example: dog,cat,pig
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+  /images/{imageId}:
+    get:
+      tags:
+          - image
+      summary: Find Image By Id
+      description: Returns a single Image
+      operationId: getImageById
+      parameters:
+        - name: imageId
+          in: path
+          description: ID of image to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+      '404':
+        description: Image not found
+
+
+components:
+  schemas:
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        label:
+          type: string
+          example: "Yo"
+        url:
+          type: string
+          example: "Yo"
+        objects:
+          type: "array"
+          items:
+            type: "string"
+
+    ImageCreateRequest:
+      type: object
+      properties:
+        imageLabel:
+          type: string
+          example: "Yo"
+        imageUrl:
+          type: string
+          example: "Yo"
+        enableObjectDetection:
+          type: boolean
