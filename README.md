@@ -13,7 +13,7 @@
 ```
 4. Run Migrations: 
 ```
-./run_flyway_migrate.sh migrate
+./run_flyway.sh migrate
 ```
 
 ### Run Cabal to Build Project
